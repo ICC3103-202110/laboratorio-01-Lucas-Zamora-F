@@ -1,0 +1,1 @@
+Bug al poner una carta no valida
