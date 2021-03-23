@@ -13,6 +13,8 @@ bugs: Al no ingresar las coordenadas como son solicitadas el programa crashea
 
 Programa v3: Standars PEP-8
 
+Programa v4: todas las variables y definiciones ahora estan en inlges.
+
 Cualquier feedback es bien agradecido.
 '''
 #-----------------------------imports-----------------------------------------
@@ -20,7 +22,7 @@ import numpy as np
 from numpy import *
 
 #-----------------------------Definiciones------------------------------------
-def mostrar(x):
+def show(x):
     
     print ('Tablero:')
     
@@ -41,7 +43,7 @@ def mostrar(x):
         a = ''
         
 
-def generar_tablero_j(x):
+def generate_board_p(x):
     
     t = np.zeros((2, x), dtype= object)
     
@@ -60,7 +62,7 @@ def generar_tablero_j(x):
     return t
 
 
-def generar_tablero_c(x):
+def generate_board_c(x):
     
     t = np.zeros((2, x))
     
@@ -85,22 +87,22 @@ def generar_tablero_c(x):
     return t
 
 
-def modificar_tablero(tableroj,tableroc, coord):
+def modify_board(board_p, board_c, coord):
     
-    tc = tableroj.copy()
+    tc = board_p.copy()
     
     a = int(coord[0])
     
     b = int(coord[1])
     
-    n = int(tablero_c[a][b])
+    n = int(board_c[a][b])
     
     tc[a][b] = n
     
     return tc
 
 
-def jugar(jugador, pjugador, ce):
+def play(player, ce):
     
     while True:
         
@@ -108,29 +110,29 @@ def jugar(jugador, pjugador, ce):
             
             z = 0
             
-            mostrar(tablero_j)
+            show(board_p)
             
-            print(jugador,'es tu turno!')
+            print(player,'es tu turno!')
             
             c1 = input('Selecciona una carta!: ')
             
-            coordenada1 = c1.split(',')
+            coordinate1 = c1.split(',')
             
-            a1 = int(coordenada1[0])
+            a1 = int(coordinate1[0])
             
-            b1 = int(coordenada1[1])
+            b1 = int(coordinate1[1])
             
-            if a1+1 <= 2 and b1+1 <= n_cartas:
+            if a1+1 <= 2 and b1+1 <= amount_cards:
                 
-                if cartas_elegidas.count(c1) == 0 :
+                if chosen_cards.count(c1) == 0 :
                     
-                    cartas_elegidas.append(c1)
+                    chosen_cards.append(c1)
                     
-                    n1 = int(tablero_c[a1][b1])
+                    n1 = int(board_c[a1][b1])
                     
-                    tm = modificar_tablero(tablero_j, tablero_c, coordenada1)
+                    tm = modify_board(board_p, board_c, coordinate1)
                     
-                    mostrar(tm) 
+                    show(tm) 
                     
                     while True:
                         
@@ -143,43 +145,43 @@ def jugar(jugador, pjugador, ce):
                         
                         c2 = input('Selecciona otra carta!: ')
                         
-                        coordenada2 = c2.split(',')
+                        coordinate2 = c2.split(',')
                         
-                        a2 = int(coordenada2[0])
+                        a2 = int(coordinate2[0])
                         
-                        b2 = int(coordenada2[1])
+                        b2 = int(coordinate2[1])
                         
-                        if a2+1 <= 2 and b2+1 <= n_cartas:
+                        if a2+1 <= 2 and b2+1 <= amount_cards:
                             
-                            if cartas_elegidas.count(c2) == 0 :
+                            if chosen_cards.count(c2) == 0 :
                                 
-                                cartas_elegidas.append(c2)
+                                chosen_cards.append(c2)
                                 
-                                tm = modificar_tablero(tm, 
-                                                       tablero_c, coordenada2)
+                                tm = modify_board(tm, 
+                                                  board_c, coordinate2)
                                 
-                                n2 = int(tablero_c[a2][b2])
+                                n2 = int(board_c[a2][b2])
                                 
-                                mostrar(tm)
+                                show(tm)
                             
                                 if n1 == n2:
                                     
-                                    print('Le diste!,',jugador,'sigue jugando')
+                                    print('Le diste!,',player,'sigue jugando')
                                     
-                                    tablero_j[a1][b1]= ''
+                                    board_p[a1][b1]= ''
                                     
-                                    tablero_j[a2][b2]= ''
+                                    board_p[a2][b2]= ''
                                     
                                     ce += 1
                                     
                                     z=1
                                     
-                                    cartas_encontradas = ce
+                                    found_cards = ce
                                     
                                     print('Cartas encontradas:', 
-                                          cartas_encontradas)
+                                          found_cards)
                                     
-                                    if cartas_encontradas == n_cartas:
+                                    if found_cards == amount_cards:
                                         
                                         return ce
                           
@@ -187,9 +189,9 @@ def jugar(jugador, pjugador, ce):
                                     
                                     print('No le diste :c')
                                     
-                                    cartas_elegidas.remove(c1)
+                                    chosen_cards.remove(c1)
                                     
-                                    cartas_elegidas.remove(c2)
+                                    chosen_cards.remove(c2)
                                     
                                     return ce 
                                 
@@ -197,13 +199,13 @@ def jugar(jugador, pjugador, ce):
                                 
                                 print('Esa carta ya fue elegida!')
                                 
-                                mostrar(tm)
+                                show(tm)
                                 
                         else:
                             
                              print('Esa carta no es valida!')
                              
-                             mostrar(tablero_j)
+                             show(board_p)
                              
                 else:
                     
@@ -215,49 +217,53 @@ def jugar(jugador, pjugador, ce):
 
     
 #-----------------------------Codigo------------------------------------------
-n_jugador1 =str(input('ingrese el nombre del jugador 1: '))
-n_jugador2 =str(input('ingrese el nombre del jugador 2: '))
-cartas_encontradas = 0
-cartas_elegidas = []
-p_jugador1 = 0
-p_jugador2 = 0
+n_player1 =str(input('ingrese el nombre del jugador 1: '))
+n_player2 =str(input('ingrese el nombre del jugador 2: '))
+found_cards = 0
+chosen_cards = []
+player1_points = 0
+player2_points = 0
 
 
 while True:
-    elegir_n_cartas = (input('Con cuantas Cartas Desea jugar?: '))
+    chosen_a_cards = (input('Con cuantas Cartas Desea jugar?: '))
     try:
-        if int(elegir_n_cartas):
+        if int(chosen_a_cards):
             break
     except ValueError:
         print('Ingrese un numero valido')
-n_cartas = int(elegir_n_cartas)
+amount_cards = int(chosen_a_cards)
     
     
 print('')
-tablero_j = generar_tablero_j(n_cartas)
-tablero_c = generar_tablero_c(n_cartas)
+board_p = generate_board_p(amount_cards)
+board_c = generate_board_c(amount_cards)
 
 
 while True:
-    ce = jugar(n_jugador1, p_jugador1,cartas_encontradas)
-    p_jugador1 += (ce - cartas_encontradas)
-    cartas_encontradas = ce
-    if cartas_encontradas == n_cartas:
+    ce = play(n_player1, found_cards)
+    player1_points += (ce - found_cards)
+    found_cards = ce
+    if found_cards == amount_cards:
         break
-    ce = jugar(n_jugador2, p_jugador2,cartas_encontradas)
-    p_jugador2 += (ce - cartas_encontradas)
-    cartas_encontradas = ce
-    if cartas_encontradas == n_cartas:
+    ce = play(n_player2, found_cards)
+    player2_points += (ce - found_cards)
+    found_cards = ce
+    if found_cards == amount_cards:
         break
     
-    
+
+print()
+print('----------------------------------------------------------------------')
 print('Se acabo el juego!')
+print()
 print('puntajes')
-print(n_jugador1,':',p_jugador1)   
-print(n_jugador2,':',p_jugador2)    
-if p_jugador1 < p_jugador2:
-    print('Gana', n_jugador2)
-elif p_jugador2 < p_jugador1:
-    print('Gana', n_jugador1)
+print(n_player1, ':', player1_points)   
+print(n_player2,':',player2_points)
+print()    
+if player1_points < player2_points:
+    print('Gana', n_player2)
+elif player2_points < player1_points:
+    print('Gana', n_player1)
 else:
     print('Es un empate!')
