@@ -4,6 +4,15 @@ Created on Mon Mar 22 12:56:49 2021
 
 @author: lucaz
 """
+#-----------------------------Notas para el Corrector-------------------------
+'''
+El codigo para funcionar bien, las cordenadas deben de ser ingresadas como 'x,x'
+por ejemplo: Seleccione una carta! 9,9
+
+bugs: Al no ingresar las coordenadas como son solicitadas el programa crashea
+
+Cualquier fidback es bien agradecido.
+'''
 #-----------------------------imports-----------------------------------------
 import numpy as np
 from numpy import *
@@ -57,6 +66,7 @@ def modificar_tablero(tableroj,tableroc, coord):
 def jugar(jugador, pjugador, ce):
     while True:
             print('')
+            z = 0
             mostrar(tablero_j)
             print(jugador,'es tu turno!')
             c1 = input('Selecciona una carta!: ')
@@ -70,8 +80,11 @@ def jugar(jugador, pjugador, ce):
                     tm = modificar_tablero(tablero_j, tablero_c, coordenada1)
                     mostrar(tm) 
                     while True:
+                        if z == 1:   #esto es para que no quede atrapado en el while de arriba y vuelva al estado inicial
+                            break
                         c2 = input('Selecciona otra carta!: ')
                         coordenada2 = c2.split(',')
+                        
                         a2 = int(coordenada2[0])
                         b2 = int(coordenada2[1])
                         if a2+1 <= 2 and b2+1 <= n_cartas:
@@ -85,9 +98,10 @@ def jugar(jugador, pjugador, ce):
                                     print('Le diste!,',jugador,' sigue jugando')
                                     tablero_j[a1][b1]= ''
                                     tablero_j[a2][b2]= ''
-                                    mostrar(tablero_j)
                                     ce += 1
+                                    z=1
                                     cartas_encontradas = ce
+                                    print('Cartas encontradas:', cartas_encontradas)
                                     if cartas_encontradas == n_cartas:
                                         return ce
                             
@@ -99,14 +113,14 @@ def jugar(jugador, pjugador, ce):
                                     return ce 
                             else:
                                 print('Esa carta ya fue elegida!')
-                                mostrar(tablero_j)
+                                mostrar(tm)
                                 
                         else:
                              print('Esa carta no es valida!')
                              mostrar(tablero_j)
                 else:
                     print('Esa carta ya fue elegida!')
-                    mostrar(tablero_j)
+                    
             else:
                 print('Esa carta no es valida!')
 
@@ -118,7 +132,17 @@ cartas_encontradas = 0
 cartas_elegidas = []
 p_jugador1 = 0
 p_jugador2 = 0
-n_cartas = int(input('Con cuantas Cartas Desea jugar?: '))
+while True:
+    elegir_n_cartas = (input('Con cuantas Cartas Desea jugar?: '))
+    try:
+        if int(elegir_n_cartas):
+            break
+    except ValueError:
+        print('Ingrese un numero valido')
+
+n_cartas = int(elegir_n_cartas)
+    
+    
 
 print('')
 tablero_j = generar_tablero_j(n_cartas)
@@ -127,14 +151,12 @@ tablero_c = generar_tablero_c(n_cartas)
 
 while True:
     ce = jugar(n_jugador1, p_jugador1,cartas_encontradas)
-    if cartas_encontradas != ce:
-        p_jugador1 += (ce - cartas_encontradas)
+    p_jugador1 += (ce - cartas_encontradas)
     cartas_encontradas = ce
     if cartas_encontradas == n_cartas:
         break
-    jugar(n_jugador2, p_jugador2,cartas_encontradas)
-    if cartas_encontradas != ce:
-        p_jugador2 += (ce - cartas_encontradas)
+    ce = jugar(n_jugador2, p_jugador2,cartas_encontradas)
+    p_jugador2 += (ce - cartas_encontradas)
     cartas_encontradas = ce
     if cartas_encontradas == n_cartas:
         break
